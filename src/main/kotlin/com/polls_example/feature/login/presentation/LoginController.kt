@@ -2,7 +2,6 @@ package com.polls_example.feature.login.presentation
 
 import com.auth0.jwt.interfaces.DecodedJWT
 import com.polls_example.database.toModel
-import com.polls_example.feature.login.data.repository.RefreshTokenRepository
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.login.domain.models.UserModel
 import com.polls_example.feature.login.presentation.dto.ConfirmEmailDto
