@@ -69,7 +69,7 @@ class ChatWebSocketTest {
 
         client2Job.start()
         // Отправка сообщения после установки соединений
-        client1Job.job.start()
+        client1Job.start()
 
         // Ждем получения сообщения (максимум 3 секунды)
         withTimeoutOrNull(3000) {
