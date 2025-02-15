@@ -1,5 +1,6 @@
 package com.polls_example.ioc.beans
 
+import com.polls_example.feature.chat.presentation.server.TwoPersonChatServer
 import com.polls_example.feature.login.data.repository.RefreshTokenRepository
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.survey.data.repository.SurveyRepository
@@ -22,4 +23,5 @@ fun Registry.useDataBeans() {
 
     singleton<EmailService> { EmailService(emailConfig = get()) }
     singleton<SimpleCacheProvider> { SimpleRedisCacheProvider(config = SimpleRedisCacheProvider.Config()) }
+    singleton<TwoPersonChatServer> { TwoPersonChatServer() }
 }

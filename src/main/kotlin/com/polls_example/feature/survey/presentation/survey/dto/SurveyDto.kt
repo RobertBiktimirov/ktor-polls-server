@@ -1,4 +1,4 @@
-package com.polls_example.feature.survey.presentation.dto
+package com.polls_example.feature.survey.presentation.survey.dto
 
 import com.polls_example.feature.survey.domain.models.QuestionTypeModel
 import kotlinx.serialization.Serializable

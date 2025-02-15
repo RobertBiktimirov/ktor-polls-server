@@ -1,11 +1,11 @@
-package com.polls_example.feature.survey.presentation
+package com.polls_example.feature.survey.presentation.survey
 
 import com.polls_example.feature.survey.data.repository.SurveyRepository
 import com.polls_example.feature.survey.domain.models.*
-import com.polls_example.feature.survey.presentation.dto.SurveyInvitationDeleteRequestDto
-import com.polls_example.feature.survey.presentation.dto.SurveyInvitationsRequestDto
-import com.polls_example.feature.survey.presentation.dto.SurveyRequestDto
-import com.polls_example.feature.survey.presentation.dto.SurveyUpdateInfoRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationDeleteRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationsRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyUpdateInfoRequestDto
 
 class SurveyController(
     val surveyRepository: SurveyRepository,

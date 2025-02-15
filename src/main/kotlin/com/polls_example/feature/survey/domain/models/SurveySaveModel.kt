@@ -1,6 +1,6 @@
 package com.polls_example.feature.survey.domain.models
 
-import com.polls_example.feature.survey.presentation.dto.QuestionRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.QuestionRequestDto
 
 sealed class SurveyUpdate(
     open val title: String,

@@ -1,9 +1,10 @@
-package com.polls_example.feature.survey.presentation
+package com.polls_example.feature.survey.presentation.survey
 
-import com.polls_example.feature.survey.presentation.dto.SurveyInvitationDeleteRequestDto
-import com.polls_example.feature.survey.presentation.dto.SurveyInvitationsRequestDto
-import com.polls_example.feature.survey.presentation.dto.SurveyRequestDto
-import com.polls_example.feature.survey.presentation.dto.SurveyUpdateInfoRequestDto
+import com.polls_example.feature.survey.presentation.question.setupQuestionRouting
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationDeleteRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationsRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.SurveyUpdateInfoRequestDto
 import com.polls_example.ioc.AppComponent
 import com.polls_example.security.CLAIM_USER_ID
 import io.ktor.http.*
@@ -21,6 +22,8 @@ fun ApplicationCall.getUserId(): Int? =
         ?.asInt()
 
 fun Application.setupSurveyRouting(appComponent: AppComponent) {
+    setupQuestionRouting(appComponent.getQuestionController())
+
     val controller = appComponent.getSurveyController()
 
     routing {

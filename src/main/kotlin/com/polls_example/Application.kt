@@ -1,11 +1,12 @@
 package com.polls_example
 
+import com.polls_example.feature.chat.presentation.setupChatRouting
 import com.polls_example.feature.login.domain.exception.UserException
 import com.polls_example.feature.login.presentation.setupLoginRouting
 import com.polls_example.feature.survey.domain.exception.SurveyDeleteInvitationException
 import com.polls_example.feature.survey.domain.exception.SurveyExceptions
 import com.polls_example.feature.survey.domain.exception.SurveyForbiddenException
-import com.polls_example.feature.survey.presentation.setupSurveyRouting
+import com.polls_example.feature.survey.presentation.survey.setupSurveyRouting
 import com.polls_example.ioc.AppComponent
 import com.polls_example.security.JwtService
 import io.ktor.http.*
@@ -107,6 +108,7 @@ fun Application.setupDatabase(databaseConfig: DatabaseConfig) {
 fun Application.setupRouting(component: AppComponent) {
     setupLoginRouting(component)
     setupSurveyRouting(component)
+    setupChatRouting(component)
 }
 
 fun Application.configureSecurity(
