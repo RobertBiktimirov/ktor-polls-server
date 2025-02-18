@@ -1,5 +1,6 @@
 package com.polls_example.ioc.beans
 
+import com.polls_example.feature.chat.presentation.ChatController
 import com.polls_example.feature.login.presentation.LoginController
 import com.polls_example.feature.survey.presentation.question.QuestionController
 import com.polls_example.feature.survey.presentation.survey.SurveyController
@@ -24,6 +25,12 @@ fun Registry.usePresentationBeans() {
     singleton<QuestionController> {
         QuestionController(
             surveyRepository = get()
+        )
+    }
+
+    singleton<ChatController> {
+        ChatController(
+            repository = get()
         )
     }
 }

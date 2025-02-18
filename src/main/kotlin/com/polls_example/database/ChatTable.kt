@@ -17,7 +17,7 @@ class ChatDAO(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<ChatDAO>(ChatTable)
 
-    val userId by ChatTable.userId
-    val surveyId by ChatTable.surveyId
-    val createdAt by ChatTable.createdAt
+    var userId by ChatTable.userId
+    var surveyId by ChatTable.surveyId
+    var createdAt by ChatTable.createdAt
 }

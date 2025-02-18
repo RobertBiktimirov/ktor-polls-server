@@ -9,6 +9,7 @@ import io.ktor.websocket.*
 fun Application.setupChatRouting(appComponent: AppComponent) {
 
     val server = appComponent.getTwoPersonChatServer()
+    val controller = appComponent.getChatController()
 
     routing {
         webSocket("/chat/{surveyId}/{email-from}/{email-to}") {
@@ -32,6 +33,7 @@ fun Application.setupChatRouting(appComponent: AppComponent) {
                         is Frame.Text -> {
                             println("frame is text with text = ${frame.readText()}")
                             server.sendMessage(emailTo, surveyId, frame.readText())
+                            controller.sendMessage(emailFrom, surveyId, frame.readText())
                         }
 
                         is Frame.Close -> {

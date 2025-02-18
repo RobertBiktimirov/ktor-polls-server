@@ -14,18 +14,18 @@ object ChatMessageTable : IntIdTable("chat_messages") {
     val imageUrl = varchar("image_url", 255).nullable()
     val isRead = bool("is_read")
     val createdAt = datetime("created_at").nullable()
-    val updatedAt = datetime("updated_at").nullable()
+    val updatedAt = datetime("updated_at").nullable().default(null)
 }
 
 class ChatMessageDAO(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<ChatMessageDAO>(ChatMessageTable)
 
-    val senderId by ChatMessageTable.senderId
-    val chatId by ChatMessageTable.chatId
-    val text by ChatMessageTable.text
-    val imageUrl by ChatMessageTable.imageUrl
-    val isRead by ChatMessageTable.isRead
-    val createdAt by ChatMessageTable.createdAt
-    val updatedAt by ChatMessageTable.updatedAt
+    var senderId by ChatMessageTable.senderId
+    var chatId by ChatMessageTable.chatId
+    var text by ChatMessageTable.text
+    var imageUrl by ChatMessageTable.imageUrl
+    var isRead by ChatMessageTable.isRead
+    var createdAt by ChatMessageTable.createdAt
+    var updatedAt by ChatMessageTable.updatedAt
 }

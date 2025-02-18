@@ -7,9 +7,11 @@ import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
+import org.junit.Before
 import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class ChatWebSocketTest {
@@ -35,7 +37,7 @@ class ChatWebSocketTest {
 
         val receivedMessages = Collections.synchronizedList(mutableListOf<String>())
 
-        val scope = CoroutineScope(Dispatchers.Default)
+        val scope = CoroutineScope(Dispatchers.IO)
 
         // Запускаем оба подключения параллельно
         val client1Job = scope.async {
@@ -87,6 +89,93 @@ class ChatWebSocketTest {
         client2Job.cancel()
     }
 
+    @Test
+    fun testMessageDelivery() = testApplication {
+        setupChatWebSocket()
+
+        val surveyId = 1
+        val email1 = "user1@example.com"
+        val email2 = "user2@example.com"
+        val email3 = "user3@example.com"
+
+        val receivedMessagesClient2 = Collections.synchronizedList(mutableListOf<String>())
+        val receivedMessagesClient3 = Collections.synchronizedList(mutableListOf<String>())
+
+        val scope = CoroutineScope(Dispatchers.IO)
+
+        // Подключение клиента 1 и отправка сообщения
+        val client1Job = scope.async {
+            val client = createClient { install(WebSockets) }
+            client.webSocket("/chat/$surveyId/$email1/$email2") {
+                send(Frame.Text("Hello User 2!"))
+            }
+        }
+
+        // Подключение клиента 2 для получения сообщения
+        val client2Job = scope.async {
+            val client = createClient { install(WebSockets) }
+            client.webSocket("/chat/$surveyId/$email2/$email1") {
+                try {
+                    for (frame in incoming) {
+                        when (frame) {
+                            is Frame.Text -> {
+                                val text = frame.readText()
+                                receivedMessagesClient2.add(text)
+                            }
+                            else -> fail("Unexpected frame type")
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Обработка ошибок
+                }
+            }
+        }
+
+        // Подключение клиента 3 для проверки, что он не получит сообщение
+        val client3Job = scope.async {
+            val client = createClient { install(WebSockets) }
+            client.webSocket("/chat/$surveyId/$email3/$email1") {
+                try {
+                    for (frame in incoming) {
+                        when (frame) {
+                            is Frame.Text -> {
+                                val text = frame.readText()
+                                receivedMessagesClient3.add(text)
+                            }
+                            else -> fail("Unexpected frame type")
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Обработка ошибок
+                }
+            }
+        }
+
+        // Даем время на установку соединений
+        delay(1000)
+
+        // Отправка сообщения после установки соединений
+        client1Job.start()
+        client2Job.start()
+        client3Job.start()
+
+        // Ждем получения сообщения от клиента 1 к клиенту 2 (максимум 3 секунды)
+        withTimeoutOrNull(3000) {
+            while (receivedMessagesClient2.isEmpty()) {
+                delay(100)
+            }
+        }
+
+        // Проверяем результаты
+        assertEquals("Hello User 2!", receivedMessagesClient2.firstOrNull())
+        assertTrue(receivedMessagesClient3.isEmpty(), "Client 3 should not receive any messages.")
+
+        // Отменяем задачи
+        client1Job.cancel()
+        client2Job.cancel()
+        client3Job.cancel()
+    }
+
     private fun ApplicationTestBuilder.setupChatWebSocket() {
         environment {
             config = MapApplicationConfig(
@@ -107,11 +196,19 @@ class ChatWebSocketTest {
         application {
             val appConfig = environment.config.toAppConfig()
             val appComponent = AppComponent(appConfig)
-            // Здесь вам нужно будет установить ваше приложение с маршрутизацией
+
+
             setupPlugins()
+            launch { setupDatabase() }
             configureSecurity(appComponent.getJwtService())
             setupChatRouting(appComponent = appComponent) // Подключите вашу маршрутизацию
         }
+    }
+
+    @Before
+    fun setupDatabase() {
+        // Подключение к in-memory базе данных H2
+        org.jetbrains.exposed.sql.Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;", driver = "org.h2.Driver")
     }
 
 }
