@@ -1,25 +1,28 @@
 package com.polls_example.feature.login.presentation
 
 import com.auth0.jwt.interfaces.DecodedJWT
-import com.polls_example.database.toModel
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.login.domain.models.UserModel
 import com.polls_example.feature.login.presentation.dto.ConfirmEmailDto
 import com.polls_example.feature.login.presentation.dto.LoginDto
 import com.polls_example.feature.login.presentation.dto.LoginResponse
 import com.polls_example.feature.login.presentation.dto.RegistrationDto
-import com.polls_example.legacy.cache.SimpleCacheProvider
-import com.polls_example.legacy.verificationPassword
-import com.polls_example.security.CLAIM_EMAIL
 import com.polls_example.legacy.EmailService
+import com.polls_example.legacy.cache.SimpleCacheProvider
+import com.polls_example.security.CLAIM_EMAIL
 import com.polls_example.security.JwtService
 import kotlin.random.Random
+
+interface PasswordValidator {
+    fun validatePassword(password: String, hashPassword: String): Boolean
+}
 
 class LoginController(
     private val userRepository: UserRepository,
     private val jwtService: JwtService,
     private val emailService: EmailService,
     private val cacheProvider: SimpleCacheProvider,
+    private val passwordValidator: PasswordValidator
 ) {
     suspend fun authenticate(loginRequest: LoginDto): LoginResponse? {
         checkUser(loginRequest.email, loginRequest.password)
@@ -27,7 +30,7 @@ class LoginController(
         val email = loginRequest.email
         val foundUser: UserModel? = userRepository.userByEmail(email)
 
-        return if (foundUser != null && verificationPassword(loginRequest.password, foundUser.password)) {
+        return if (foundUser != null && passwordValidator.validatePassword(loginRequest.password, foundUser.password)) {
             val accessToken = jwtService.createAccessToken(foundUser)
             val refreshToken = jwtService.createRefreshToken(foundUser)
             LoginResponse(
@@ -59,7 +62,7 @@ class LoginController(
                 image = registrationDto.image,
                 password = registrationDto.password
             )
-        ).toModel()
+        )
 
         val accessToken = createAccessToken(userModel)
         val refreshToken = createRefreshToken(userModel)

@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.javatime.datetime
 object GroupsTable : IntIdTable("groups") {
     val userId = integer("user_id").references(UsersTable.id, onDelete = ReferenceOption.CASCADE)
     val createdAt = datetime("created_at").nullable()
+    val name = text("group_name").default("Без названия")
     val updatedAt = datetime("updated_at").nullable().default(null)
 }
 
@@ -18,4 +19,5 @@ class GroupsDAO(id: EntityID<Int>) : IntEntity(id) {
     var userId by GroupsTable.userId
     var createdAt by GroupsTable.createdAt
     var updatedAt by GroupsTable.updatedAt
+    var groupName by GroupsTable.name
 }

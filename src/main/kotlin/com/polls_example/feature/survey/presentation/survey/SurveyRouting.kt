@@ -49,7 +49,7 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
                 call.respond(HttpStatusCode.OK, response)
             }
 
-            get("surveys/created/responses/{id}") {
+            get("surveys/created/{id}/responses/") {
                 val surveyId = call.pathParameters["id"]?.toIntOrNull()
                     ?: return@get call.response.status(HttpStatusCode.BadRequest)
                 val userId = call.getUserId() ?: return@get call.response.status(HttpStatusCode.Unauthorized)

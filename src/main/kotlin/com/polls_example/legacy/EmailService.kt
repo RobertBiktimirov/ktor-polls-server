@@ -9,7 +9,6 @@ private const val CONFIRMATION_CODE = "Код подтверждения"
 class EmailService(
     private val emailConfig: EmailConfig,
 ) {
-
     fun setConfirmEmailMessage(userEmail: String, code: Int): Boolean {
         return try {
             SimpleEmail().apply {

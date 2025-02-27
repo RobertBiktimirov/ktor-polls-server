@@ -24,7 +24,7 @@ class SimpleRedisCacheProvider(config: Config) : SimpleCacheProvider(config) {
         mutex.unlock()
     }
 
-    data class Config internal constructor(
+    data class Config (
         var host: String = "localhost",
         var port: Int = 6379,
         var ssl: Boolean = false

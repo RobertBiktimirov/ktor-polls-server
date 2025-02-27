@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.javatime.datetime
 object GroupItemsTable : IntIdTable("groups") {
     val userId = integer("user_id").references(UsersTable.id, onDelete = ReferenceOption.CASCADE)
     val groupId = integer("group_id").references(GroupsTable.id, onDelete = ReferenceOption.CASCADE)
+    val memberId = integer("member_id").references(UsersTable.id, onDelete = ReferenceOption.CASCADE)
     val createdAt = datetime("created_at").nullable()
 }
 
@@ -17,4 +18,5 @@ class GroupItemsDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<GroupItemsDAO>(GroupItemsTable)
     var groupId by GroupItemsTable.groupId
     var createdAt by GroupItemsTable.createdAt
+    var memberId by GroupItemsTable.memberId
 }

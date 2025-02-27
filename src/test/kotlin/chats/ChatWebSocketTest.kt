@@ -1,7 +1,10 @@
-package com.polls_example
+package chats
 
+import com.polls_example.configureSecurity
 import com.polls_example.feature.chat.presentation.setupChatRouting
 import com.polls_example.ioc.AppComponent
+import com.polls_example.setupPlugins
+import com.polls_example.toAppConfig
 import io.ktor.client.plugins.websocket.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*

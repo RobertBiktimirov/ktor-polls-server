@@ -3,6 +3,9 @@ package com.polls_example
 import com.polls_example.feature.chat.presentation.setupChatRouting
 import com.polls_example.feature.login.domain.exception.UserException
 import com.polls_example.feature.login.presentation.setupLoginRouting
+import com.polls_example.feature.profile.domain.exceptions.GroupException403
+import com.polls_example.feature.profile.domain.exceptions.GroupException404
+import com.polls_example.feature.profile.presentation.grouping.setupGroupingRouting
 import com.polls_example.feature.survey.domain.exception.SurveyDeleteInvitationException
 import com.polls_example.feature.survey.domain.exception.SurveyExceptions
 import com.polls_example.feature.survey.domain.exception.SurveyForbiddenException
@@ -94,6 +97,13 @@ fun Application.setupPlugins() {
         exception<DataConversionException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, cause.message.toString())
         }
+
+        exception<GroupException403> { call, _ ->
+            call.respond(HttpStatusCode.Forbidden)
+        }
+        exception<GroupException404> { call, _ ->
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 }
 
@@ -109,6 +119,7 @@ fun Application.setupRouting(component: AppComponent) {
     setupLoginRouting(component)
     setupSurveyRouting(component)
     setupChatRouting(component)
+    setupGroupingRouting(component)
 }
 
 fun Application.configureSecurity(

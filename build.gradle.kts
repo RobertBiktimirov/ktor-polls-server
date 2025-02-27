@@ -56,6 +56,10 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("com.h2database:h2:2.1.214")
     testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("io.ktor:ktor-client-mock:$ktor_version")
+    testImplementation("org.mockito:mockito-core:3.12.4") // Основной Mockito модуль
+    testImplementation("org.mockito:mockito-inline:3.12.4") // Для работы с корутинными тестами
+    testImplementation("io.ktor:ktor-server-tests:1.6.5") // для тестирования Ktor
 
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")

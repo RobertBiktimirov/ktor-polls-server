@@ -37,13 +37,15 @@ class UserRepository {
             throw UserException("Почта уже используется")
         }
 
-        UserDAO.new {
+        val dao = UserDAO.new {
             name = userModel.name
             email = userModel.email
             password = hashPassword(userModel.password)
             image = userModel.image
             createdAt = LocalDateTime.now()
         }
+
+        return@suspendTransaction dao.toModel()
     }
 
     suspend fun checkUser(email: String, password: String): UserModel = suspendTransaction {
