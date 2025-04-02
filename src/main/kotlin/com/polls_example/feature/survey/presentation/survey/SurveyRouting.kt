@@ -1,10 +1,7 @@
 package com.polls_example.feature.survey.presentation.survey
 
 import com.polls_example.feature.survey.presentation.question.setupQuestionRouting
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationDeleteRequestDto
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationsRequestDto
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyRequestDto
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyUpdateInfoRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.*
 import com.polls_example.ioc.AppComponent
 import com.polls_example.security.CLAIM_USER_ID
 import io.ktor.http.*
@@ -28,7 +25,7 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
 
     routing {
         authenticate("another-auth") {
-            get("/surveys/received") {
+            get("surveys/received") {
                 val userId = call.getUserId() ?: return@get call.response.status(HttpStatusCode.Unauthorized)
                 val response = controller.getSurveysInvitation(userId)
                 call.respond(HttpStatusCode.OK, response)
@@ -40,7 +37,7 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
                 call.respond(HttpStatusCode.OK, response)
             }
 
-            get("/surveys/received/{id}") {
+            get("surveys/received/{id}") {
                 val surveyId = call.pathParameters["id"]?.toIntOrNull()
                     ?: return@get call.response.status(HttpStatusCode.BadRequest)
 
@@ -109,6 +106,13 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
             put("surveys/activate/{id}") {
                 val id = call.pathParameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
                 controller.activateSurvey(id)
+                call.respond(HttpStatusCode.OK)
+            }
+
+            post("surveys/{id}/pass") {
+                val userId = call.getUserId() ?: return@post call.response.status(HttpStatusCode.Unauthorized)
+                val passDto = call.receive<PassSurveyDto>()
+                controller.passSurvey(userId, passDto)
                 call.respond(HttpStatusCode.OK)
             }
         }

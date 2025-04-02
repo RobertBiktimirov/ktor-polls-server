@@ -1,15 +1,15 @@
 package com.polls_example.feature.login.presentation
 
-import com.polls_example.feature.login.presentation.dto.ConfirmEmailDto
-import com.polls_example.feature.login.presentation.dto.LoginDto
-import com.polls_example.feature.login.presentation.dto.RefreshTokenDto
-import com.polls_example.feature.login.presentation.dto.RegistrationDto
+import com.polls_example.feature.files.presentation.Paths
+import com.polls_example.feature.login.presentation.dto.*
 import com.polls_example.ioc.AppComponent
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.io.File
 
 fun Application.setupLoginRouting(appComponent: AppComponent) {
     val controller = appComponent.getLoginController()
@@ -35,9 +35,56 @@ fun Application.setupLoginRouting(appComponent: AppComponent) {
         }
 
         post("login/registration") {
-            val registrationDto = call.receive<RegistrationDto>()
-            val response = controller.registerUser(registrationDto)
-            call.respond(response)
+            val multipart = call.receiveMultipart()
+
+            var fileName: String?
+            var imageUrl: String? = null
+            var email = ""
+            var name = ""
+            var password = ""
+
+            multipart.forEachPart { part ->
+                when (part) {
+                    is PartData.FileItem -> {
+                        fileName = part.originalFileName
+                        @Suppress("DEPRECATION")
+                        val fileBytes = part.streamProvider().readBytes()
+
+                        // Сохранение файла в директории uploads
+                        val file = File("uploads/$fileName")
+                        file.writeBytes(fileBytes)
+
+                        imageUrl = "${Paths.RESOURCE_AVATARS_PATH}/$fileName"
+                        part.dispose() // Освобождаем ресурсы
+                    }
+
+                    is PartData.FormItem -> {
+                        when (part.name) {
+                            "email" -> email = part.value
+                            "name" -> name = part.value
+                            "password" -> password = part.value
+                        }
+                    }
+
+                    else -> part.dispose()
+                }
+            }
+            val response = controller.registerUser(
+                RegistrationDto(
+                    email = email,
+                    name = name,
+                    password = password,
+                    image = imageUrl
+                )
+            )
+            call.respond(HttpStatusCode.OK, response)
+        }
+
+        post("login/send-confirm-email-code") {
+            val email = call.receive<EmailCodeDto>()
+            if (email.email.isNullOrEmpty()) return@post call.response.status(HttpStatusCode.BadRequest)
+            controller.sendEmailCode(email.email)
+            call.response.status(HttpStatusCode.OK)
         }
 
         post("login/confirm-email") {

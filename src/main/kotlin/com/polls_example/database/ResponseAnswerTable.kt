@@ -19,8 +19,8 @@ class ResponseAnswerDAO(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<ResponseAnswerDAO>(ResponseAnswerTable)
 
-    val responseId by ResponseAnswerTable.responseId
-    val answerOptionId by ResponseAnswerTable.answerOptionId
-    val createdAt by ResponseAnswerTable.createdAt
-    val updatedAt by ResponseAnswerTable.updatedAt
+    var responseId by ResponseAnswerTable.responseId
+    var answerOptionId by ResponseAnswerTable.answerOptionId
+    var createdAt by ResponseAnswerTable.createdAt
+    var updatedAt by ResponseAnswerTable.updatedAt
 }

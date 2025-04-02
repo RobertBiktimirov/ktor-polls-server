@@ -5,6 +5,7 @@ import com.polls_example.feature.survey.domain.exception.SurveyDeleteInvitationE
 import com.polls_example.feature.survey.domain.exception.SurveyExceptions
 import com.polls_example.feature.survey.domain.exception.SurveyForbiddenException
 import com.polls_example.feature.survey.domain.models.*
+import com.polls_example.feature.survey.presentation.survey.dto.PassSurveyDto
 import com.polls_example.legacy.suspendTransaction
 import com.polls_example.legacy.timeInMillis
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -263,6 +264,31 @@ class SurveyRepository {
         changeSurveyActiveState(surveyId, false)
     }
 
+    suspend fun passSurvey(userId: Int, passSurveyDto: PassSurveyDto) = suspendTransaction {
+        val surveyResponse = SurveyResponsesDAO.new {
+            surveyId = passSurveyDto.surveyId
+            this.userId = userId
+            completedAt = LocalDateTime.now()
+        }
+
+        passSurveyDto.passQuestions.forEach {
+            val response = ResponseDAO.new {
+                surveyResponseId = surveyResponse.id.value
+                questionId = it.questionId
+                text = it.responseText
+                createdAt = LocalDateTime.now()
+            }
+
+            it.passAnswersOptionsId.forEach {
+                ResponseAnswerDAO.new {
+                    responseId = response.id.value
+                    answerOptionId = it
+                    createdAt = LocalDateTime.now()
+                }
+            }
+        }
+    }
+
     private fun changeSurveyActiveState(surveyId: Int, isActive: Boolean): Boolean {
         val survey = SurveyDAO.findById(surveyId) ?: throw SurveyExceptions("Не удалось найти опрос")
         survey.isActive = isActive
@@ -297,7 +323,7 @@ class SurveyRepository {
 
         return responses.map {
             val question = QuestionDAO.findById(it.questionId)?.text ?: "Не удалось найти вопрос"
-            var answer = it.text
+            var answer = it.text ?: ""
 
             if (answer.isEmpty()) {
                 val answerOption = AnswerOptionDAO

@@ -1,4 +1,4 @@
-package com.polls_example.surveys
+package surveys
 
 import com.polls_example.feature.survey.data.repository.SurveyRepository
 import com.polls_example.feature.survey.domain.models.SurveyInfoModel

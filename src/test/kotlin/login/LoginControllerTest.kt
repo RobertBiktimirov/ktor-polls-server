@@ -1,4 +1,4 @@
-package com.polls_example.login
+package login
 
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.login.domain.models.UserModel

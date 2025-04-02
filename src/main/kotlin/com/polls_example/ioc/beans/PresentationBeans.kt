@@ -1,6 +1,7 @@
 package com.polls_example.ioc.beans
 
 import com.polls_example.feature.chat.presentation.ChatController
+import com.polls_example.feature.files.presentation.FileController
 import com.polls_example.feature.login.presentation.LoginController
 import com.polls_example.feature.login.presentation.PasswordValidator
 import com.polls_example.feature.profile.presentation.grouping.GroupingController
@@ -51,5 +52,11 @@ fun Registry.usePresentationBeans() {
                 return verificationPassword(password, hashPassword)
             }
         }
+    }
+
+    singleton<FileController> {
+        FileController(
+            userRepository = get(),
+        )
     }
 }

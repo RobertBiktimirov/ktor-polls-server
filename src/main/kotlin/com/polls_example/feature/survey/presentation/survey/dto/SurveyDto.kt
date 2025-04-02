@@ -46,3 +46,16 @@ data class SurveyUpdateInfoRequestDto(
     val image: String?,
     val description: String?
 )
+
+@Serializable
+data class PassSurveyDto(
+    val surveyId: Int,
+    val passQuestions: List<PassQuestionDto>
+)
+
+@Serializable
+data class PassQuestionDto(
+    val questionId: Int,
+    val responseText: String?,
+    val passAnswersOptionsId: List<Int>
+)

@@ -2,10 +2,7 @@ package com.polls_example.feature.survey.presentation.survey
 
 import com.polls_example.feature.survey.data.repository.SurveyRepository
 import com.polls_example.feature.survey.domain.models.*
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationDeleteRequestDto
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyInvitationsRequestDto
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyRequestDto
-import com.polls_example.feature.survey.presentation.survey.dto.SurveyUpdateInfoRequestDto
+import com.polls_example.feature.survey.presentation.survey.dto.*
 
 class SurveyController(
     val surveyRepository: SurveyRepository,
@@ -82,4 +79,8 @@ class SurveyController(
         )
         return infoModel
     }
-}
+
+    suspend fun passSurvey(userId: Int, dto: PassSurveyDto) {
+        surveyRepository.passSurvey(userId, dto)
+    }
+ }

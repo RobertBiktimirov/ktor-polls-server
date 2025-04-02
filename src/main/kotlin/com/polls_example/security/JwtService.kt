@@ -9,6 +9,7 @@ import com.polls_example.feature.login.domain.models.UserModel
 import io.ktor.server.auth.jwt.*
 import java.util.*
 
+// лучше не хранить
 const val CLAIM_EMAIL = "email"
 const val CLAIM_NAME = "name"
 const val CLAIM_IMAGE_URL = "image_url"

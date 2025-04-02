@@ -1,6 +1,7 @@
 package com.polls_example
 
 import com.polls_example.feature.chat.presentation.setupChatRouting
+import com.polls_example.feature.files.presentation.setupFileUploadRouting
 import com.polls_example.feature.login.domain.exception.UserException
 import com.polls_example.feature.login.presentation.setupLoginRouting
 import com.polls_example.feature.profile.domain.exceptions.GroupException403
@@ -120,6 +121,7 @@ fun Application.setupRouting(component: AppComponent) {
     setupSurveyRouting(component)
     setupChatRouting(component)
     setupGroupingRouting(component)
+    setupFileUploadRouting(component)
 }
 
 fun Application.configureSecurity(

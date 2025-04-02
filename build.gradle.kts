@@ -50,7 +50,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-core:5.5.0")
 
 
-    testImplementation("io.ktor:ktor-server-test-host")
+//    testImplementation("io.ktor:ktor-server-test-host:$kotlin_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("io.ktor:ktor-websockets:$ktor_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
@@ -60,6 +60,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.12.4") // Основной Mockito модуль
     testImplementation("org.mockito:mockito-inline:3.12.4") // Для работы с корутинными тестами
     testImplementation("io.ktor:ktor-server-tests:1.6.5") // для тестирования Ktor
+    testImplementation("io.ktor:ktor-server-core:$ktor_version") // Используйте актуальную версию Kotlin
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version") // Используйте актуальную версию Kotlin
 
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")

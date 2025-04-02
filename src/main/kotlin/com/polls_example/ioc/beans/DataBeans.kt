@@ -2,6 +2,7 @@ package com.polls_example.ioc.beans
 
 import com.polls_example.feature.chat.data.ChatRepository
 import com.polls_example.feature.chat.presentation.server.TwoPersonChatServer
+import com.polls_example.feature.files.data.FileRepository
 import com.polls_example.feature.login.data.repository.RefreshTokenRepository
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.profile.data.GroupingRepository
@@ -28,4 +29,5 @@ fun Registry.useDataBeans() {
     singleton<TwoPersonChatServer> { TwoPersonChatServer() }
     singleton<ChatRepository> { ChatRepository() }
     singleton<GroupingRepository> { GroupingRepository() }
+    singleton<FileRepository> { FileRepository() }
 }

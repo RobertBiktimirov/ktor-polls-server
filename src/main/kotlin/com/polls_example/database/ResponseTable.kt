@@ -13,7 +13,7 @@ object ResponseTable : IntIdTable("responses") {
         integer("survey_response_id").references(SurveyResponseTable.id, onDelete = ReferenceOption.CASCADE)
 
     val questionId = integer("question_id").references(QuestionTable.id, onDelete = ReferenceOption.CASCADE)
-    val text = text("text")
+    val text = text("text").nullable()
     val createdAt = datetime("created_at").nullable()
     val updatedAt = datetime("updated_at").nullable()
 }
@@ -22,9 +22,9 @@ class ResponseDAO(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<ResponseDAO>(ResponseTable)
 
-    val surveyResponseId by ResponseTable.surveyResponseId
-    val questionId by ResponseTable.questionId
-    val text by ResponseTable.text
-    val createdAt by ResponseTable.createdAt
-    val updatedAt by ResponseTable.updatedAt
+    var surveyResponseId by ResponseTable.surveyResponseId
+    var questionId by ResponseTable.questionId
+    var text by ResponseTable.text
+    var createdAt by ResponseTable.createdAt
+    var updatedAt by ResponseTable.updatedAt
 }

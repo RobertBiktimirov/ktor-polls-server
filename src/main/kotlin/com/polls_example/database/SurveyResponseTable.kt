@@ -17,7 +17,7 @@ object SurveyResponseTable : IntIdTable("survey_responses") {
 class SurveyResponsesDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<SurveyResponsesDAO>(SurveyResponseTable)
 
-    val surveyId by SurveyResponseTable.surveyId
-    val userId by SurveyResponseTable.userId
-    val completedAt by SurveyResponseTable.completedAt
+    var surveyId by SurveyResponseTable.surveyId
+    var userId by SurveyResponseTable.userId
+    var completedAt by SurveyResponseTable.completedAt
 }

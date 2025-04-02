@@ -67,7 +67,7 @@ class LoginController(
         val accessToken = createAccessToken(userModel)
         val refreshToken = createRefreshToken(userModel)
 
-        sendEmailCode(userModel.email)
+//        sendEmailCode(userModel.email)
         return LoginResponse(accessToken, refreshToken)
     }
 
@@ -82,7 +82,7 @@ class LoginController(
         return isEquals
     }
 
-    private suspend fun sendEmailCode(email: String) {
+    suspend fun sendEmailCode(email: String) {
         val code = Random.nextInt(100000, 999999)
         if (emailService.setConfirmEmailMessage(email, code)) {
             cacheProvider.setCache(email, code)

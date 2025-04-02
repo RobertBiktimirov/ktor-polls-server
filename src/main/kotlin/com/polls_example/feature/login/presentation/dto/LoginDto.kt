@@ -32,3 +32,8 @@ data class ConfirmEmailDto(
     val email: String,
     val code: Int,
 )
+
+@Serializable
+data class EmailCodeDto(
+    val email: String?,
+)

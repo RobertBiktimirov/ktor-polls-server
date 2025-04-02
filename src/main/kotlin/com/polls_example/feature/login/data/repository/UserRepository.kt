@@ -20,6 +20,12 @@ class UserRepository {
         UserDAO.findById(id)?.toModel()
     }
 
+    suspend fun updateUserAvatar(path: String, userId: Int) = suspendTransaction {
+        val userDao = UserDAO.findById(userId)
+        userDao?.image = path
+        userDao?.flush()
+    }
+
     suspend fun userByEmail(email: String): UserModel? = suspendTransaction {
         val userByEmail = UserDAO
             .find { UsersTable.email eq email }
