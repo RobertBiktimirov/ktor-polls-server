@@ -7,7 +7,7 @@ import com.polls_example.JwtConfig
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.login.domain.models.UserModel
 import io.ktor.server.auth.jwt.*
-import java.util.*
+import java.time.Instant
 
 // лучше не хранить
 const val CLAIM_EMAIL = "email"
@@ -34,11 +34,11 @@ class JwtService(
 
     // 1 Час
     fun createAccessToken(userModel: UserModel): String =
-        createJwtToken(userModel, 3600000)
+        createJwtToken(userModel, 3600000L)
 
     // 1 Год
     fun createRefreshToken(userModel: UserModel): String =
-        createJwtToken(userModel, 31556952000)
+        createJwtToken(userModel, 31556952000L)
 
     private fun createJwtToken(userModel: UserModel, expireIn: Long): String =
         JWT.create()
@@ -49,7 +49,7 @@ class JwtService(
             .withClaim(CLAIM_NAME, userModel.name)
             .withClaim(CLAIM_IMAGE_URL, userModel.image)
             .withClaim(CLAIM_EMAIL_VERIFIED_AT, userModel.emailVerifiedAt)
-            .withExpiresAt(Date(Calendar.getInstance().timeInMillis + expireIn))
+            .withExpiresAt(Instant.now().plusMillis(expireIn))
             .sign(Algorithm.HMAC256(secret))
 
     suspend fun customValidator(

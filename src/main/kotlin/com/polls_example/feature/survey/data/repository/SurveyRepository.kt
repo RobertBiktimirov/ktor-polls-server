@@ -77,9 +77,13 @@ class SurveyRepository {
             createdTime = surveyDAO.createdAt?.timeInMillis ?: 0L,
             imageUrl = surveyDAO.imageUrl,
             isActive = surveyDAO.isActive,
-            updateTime = surveyDAO.updatedAt?.timeInMillis
+            updateTime = surveyDAO.updatedAt?.timeInMillis,
+            authorEmail = findAuthorUser(surveyDAO)?.email
         )
     }
+
+    private fun findAuthorUser(surveyDAO: SurveyDAO) =
+        UserDAO.findById(surveyDAO.userId)
 
     suspend fun getSurveysResponses(surveyId: Int): List<SurveyResponseInfoModel> = suspendTransaction {
         val surveyResponses = SurveyResponsesDAO
@@ -127,6 +131,8 @@ class SurveyRepository {
             )
         }
     }
+
+    suspend fun getAuthorSurvey(surveyId: Int) {}
 
     suspend fun getUserAllSurveysByQuery(userId: Int, query: String): List<SurveysModel> = suspendTransaction {
 
@@ -177,7 +183,8 @@ class SurveyRepository {
                 imageUrl = surveyDao.imageUrl,
                 isActive = surveyDao.isActive,
                 updateTime = surveyDao.updatedAt?.timeInMillis,
-                createdTime = surveyDao.createdAt?.timeInMillis ?: 0L
+                createdTime = surveyDao.createdAt?.timeInMillis ?: 0L,
+                authorEmail = findAuthorUser(surveyDao)?.email
             )
         }
 
@@ -215,7 +222,8 @@ class SurveyRepository {
             imageUrl = surveyDao.imageUrl,
             isActive = surveyDao.isActive,
             updateTime = surveyDao.updatedAt?.timeInMillis,
-            createdTime = surveyDao.createdAt?.timeInMillis ?: 0L
+            createdTime = surveyDao.createdAt?.timeInMillis ?: 0L,
+            authorEmail = findAuthorUser(surveyDao)?.email
         )
     }
 

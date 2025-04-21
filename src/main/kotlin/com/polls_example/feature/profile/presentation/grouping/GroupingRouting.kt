@@ -52,8 +52,6 @@ fun Application.setupGroupingRouting(appComponent: AppComponent) {
 
                 controller.deleteGroup(userId, groupId)
             }
-
-
         }
     }
 }

@@ -1,6 +1,6 @@
-val kotlin_version = "2.1.0"
-var ktor_version = "3.0.3"
-var logback_version = "1.4.14"
+val kotlinVersion = "2.1.0"
+var ktorVersion = "3.1.2"
+var logbackVersion = "1.4.14"
 
 plugins {
     kotlin("jvm") version "2.1.0"
@@ -27,14 +27,14 @@ dependencies {
     implementation("io.ktor:ktor-server-auth")
     implementation("io.ktor:ktor-server-auth-jwt")
     implementation("io.ktor:ktor-server-netty")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("io.ktor:ktor-server-config-yaml")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    implementation("io.ktor:ktor-server-status-pages:$ktor_version")
-    implementation("io.ktor:ktor-server-websockets:$ktor_version")
-    implementation("io.ktor:ktor-server-core:$ktor_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("io.ktor:ktor-server-websockets:$ktorVersion")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
 //    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 
     implementation("com.yandex.scout:scout-core:0.9.3")
@@ -51,17 +51,17 @@ dependencies {
 
 
 //    testImplementation("io.ktor:ktor-server-test-host:$kotlin_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-    testImplementation("io.ktor:ktor-websockets:$ktor_version")
-    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.ktor:ktor-websockets:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("com.h2database:h2:2.1.214")
     testImplementation("io.mockk:mockk:1.12.0")
-    testImplementation("io.ktor:ktor-client-mock:$ktor_version")
+    testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("org.mockito:mockito-core:3.12.4") // Основной Mockito модуль
     testImplementation("org.mockito:mockito-inline:3.12.4") // Для работы с корутинными тестами
     testImplementation("io.ktor:ktor-server-tests:1.6.5") // для тестирования Ktor
-    testImplementation("io.ktor:ktor-server-core:$ktor_version") // Используйте актуальную версию Kotlin
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version") // Используйте актуальную версию Kotlin
+    testImplementation("io.ktor:ktor-server-core:$ktorVersion") // Используйте актуальную версию Kotlin
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion") // Используйте актуальную версию Kotlin
 
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")

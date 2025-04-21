@@ -62,26 +62,26 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
                 call.respond(HttpStatusCode.OK, response)
             }
 
-            post("surveys/add") {
+            post("surveys/created/add") {
                 val userId = call.getUserId() ?: return@post call.response.status(HttpStatusCode.Unauthorized)
                 val requestDto = call.receive<SurveyRequestDto>()
                 val newSurvey = controller.saveSurvey(userId, requestDto)
                 call.respond(HttpStatusCode.OK, newSurvey)
             }
 
-            post("surveys/invitation") {
+            post("surveys/created/invitation") {
                 val requestDto = call.receive<SurveyInvitationsRequestDto>()
                 controller.inviteUsersInSurvey(requestDto)
                 call.respond(HttpStatusCode.OK)
             }
 
-            delete("surveys/invitation") {
+            delete("surveys/created/invitation") {
                 val requestDto = call.receive<SurveyInvitationDeleteRequestDto>()
                 controller.deleteInviteUserInSurvey(requestDto)
                 call.respond(HttpStatusCode.OK)
             }
 
-            put("surveys/updateInfo") {
+            put("surveys/created/updateInfo") {
                 val requestDto = call.receive<SurveyUpdateInfoRequestDto>()
                 val response = controller.updateSurveyInfo(requestDto)
                 call.respond(HttpStatusCode.OK, response)

@@ -16,6 +16,7 @@ data class SurveyInfoModel(
     val description: String?,
     val imageUrl: String?,
     val isActive: Boolean,
+    val authorEmail: String?,
     val updateTime: Long?,
     val createdTime: Long
 )
