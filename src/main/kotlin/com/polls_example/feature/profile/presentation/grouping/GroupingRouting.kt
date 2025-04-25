@@ -19,13 +19,13 @@ fun Application.setupGroupingRouting(appComponent: AppComponent) {
 
     routing {
         authenticate("another-auth") {
-            get("/profile/groups") {
+            get("profile/groups") {
                 val userId = call.getUserId() ?: return@get call.response.status(HttpStatusCode.Unauthorized)
                 val response = controller.getGroupsByUserId(userId)
                 call.respond(HttpStatusCode.OK, response)
             }
 
-            get("/profile/group/{id}") {
+            get("profile/group/{id}") {
                 val userId = call.getUserId() ?: return@get call.response.status(HttpStatusCode.Unauthorized)
                 val groupId = getGroupId() ?: return@get call.respond(HttpStatusCode.BadRequest)
 
@@ -39,14 +39,14 @@ fun Application.setupGroupingRouting(appComponent: AppComponent) {
                 TODO("not implementation")
             }
 
-            post("/profile/group/create") {
+            post("profile/group/create") {
                 val userId = call.getUserId() ?: return@post call.response.status(HttpStatusCode.Unauthorized)
                 val requestDto = call.receive<CreateGroupDto>()
                 val response = controller.createGroup(userId, requestDto)
                 call.respond(HttpStatusCode.OK, response)
             }
 
-            delete("/profile/group/{id}/delete") {
+            delete("profile/group/{id}/delete") {
                 val userId = call.getUserId() ?: return@delete call.response.status(HttpStatusCode.Unauthorized)
                 val groupId = getGroupId() ?: return@delete call.respond(HttpStatusCode.BadRequest)
 

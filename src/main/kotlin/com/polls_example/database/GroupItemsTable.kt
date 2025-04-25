@@ -8,7 +8,6 @@ import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.datetime
 
 object GroupItemsTable : IntIdTable("group_items") {
-    val userId = integer("user_id").references(UsersTable.id, onDelete = ReferenceOption.CASCADE)
     val groupId = integer("group_id").references(GroupsTable.id, onDelete = ReferenceOption.CASCADE)
     val memberId = integer("member_id").references(UsersTable.id, onDelete = ReferenceOption.CASCADE)
     val createdAt = datetime("created_at").nullable()

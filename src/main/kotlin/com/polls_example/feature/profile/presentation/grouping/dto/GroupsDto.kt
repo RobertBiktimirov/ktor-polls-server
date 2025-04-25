@@ -18,5 +18,6 @@ data class GroupInfoDto(
 data class UserInGroupDto(
     val id: Int,
     val email: String?,
+    val name: String?,
     val imageUrl: String?
 )

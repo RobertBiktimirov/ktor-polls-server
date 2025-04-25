@@ -26,15 +26,17 @@ class SurveyRepository {
             .find { SurveyTable.id inList invitationSurveys.map { it.surveyId } }
             .toList()
 
-        val modelList = surveysList.map { dao ->
-            SurveysModel(
-                id = dao.id.value,
-                title = dao.title,
-                isCompleted = invitationSurveys.firstOrNull { it.surveyId == it.id.value }?.completedAt != null,
-                image = dao.imageUrl,
-                isActive = dao.isActive
-            )
-        }
+        val modelList = surveysList
+            .map { dao ->
+                SurveysModel(
+                    id = dao.id.value,
+                    title = dao.title,
+                    isCompleted = invitationSurveys.firstOrNull { it.surveyId == it.surveyId }?.completedAt != null,
+                    image = dao.imageUrl,
+                    isActive = dao.isActive
+                )
+            }
+//            .filter { it.isCompleted != true }
 
         return@suspendTransaction modelList
     }
@@ -278,6 +280,12 @@ class SurveyRepository {
             this.userId = userId
             completedAt = LocalDateTime.now()
         }
+
+        val surveyInvitationsDAO =
+            SurveyInvitationsDAO.find { (SurveyInvitationsTable.userId eq userId) and (SurveyInvitationsTable.surveyId eq passSurveyDto.surveyId) }
+                .singleOrNull()
+
+        surveyInvitationsDAO?.completedAt = LocalDateTime.now()
 
         passSurveyDto.passQuestions.forEach {
             val response = ResponseDAO.new {

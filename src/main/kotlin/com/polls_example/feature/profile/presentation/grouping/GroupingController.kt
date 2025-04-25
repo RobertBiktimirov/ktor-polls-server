@@ -55,7 +55,8 @@ class GroupingController(
             UserInGroupDto(
                 id = memberId,
                 email = userInfo?.email,
-                imageUrl = userInfo?.image
+                imageUrl = userInfo?.image,
+                name = userInfo?.name
             )
         }
 }
