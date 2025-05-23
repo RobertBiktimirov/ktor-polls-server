@@ -35,8 +35,30 @@ class GroupingController(
         repository.deleteGroup(userId, groupId)
     }
 
-    suspend fun addMemberInGroup(userId: Int, groupId: Int, memberId: Int): List<UserInGroupDto> {
-        TODO("not implementation")
+    suspend fun addMemberInGroup(userId: Int, groupId: Int, memberId: Int) =
+        repository.addMember(userId, groupId, memberId)
+
+    suspend fun deleteMemberInGroup(userId: Int, groupId: Int, memberId: Int) =
+        repository.deleteMember(groupId, memberId)
+
+    suspend fun getUsersByEmail(userId: Int, email: String): List<UserInGroupDto> =
+        userRepository.getUsersByEmail(userId, email).map {
+            UserInGroupDto(
+                it.id,
+                it.email,
+                it.name,
+                it.image
+            )
+        }
+
+    suspend fun getUserById(userId: Int): UserInGroupDto {
+        val dto = userRepository.userById(userId)
+        return UserInGroupDto(
+            dto?.id ?: 0,
+            dto?.email,
+            dto?.name,
+            dto?.image
+        )
     }
 
     private suspend fun getGroupInfoDto(groupInfoModel: GroupInfoModel): GroupInfoDto {

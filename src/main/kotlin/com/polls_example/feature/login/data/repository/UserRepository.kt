@@ -34,6 +34,16 @@ class UserRepository {
         return@suspendTransaction userByEmail?.toModel()
     }
 
+    suspend fun getUsersByEmail(userId: Int, email: String): List<UserModel> = suspendTransaction {
+        val users = UserDAO
+            .find { UsersTable.email like "%$email" }
+            .limit(10)
+            .filter { it.id.value != userId }
+            .map { it.toModel() }
+
+        users
+    }
+
     suspend fun addUser(userModel: UserModel) = suspendTransaction {
         val userByEmail = UserDAO
             .find { UsersTable.email eq userModel.email }

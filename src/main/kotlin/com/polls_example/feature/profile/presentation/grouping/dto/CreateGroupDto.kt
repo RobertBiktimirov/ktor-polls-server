@@ -7,3 +7,8 @@ data class CreateGroupDto(
     val name: String,
     val membersId: List<Int>,
 )
+
+@Serializable
+data class MemberGroupDto(
+    val memberId: Int
+)

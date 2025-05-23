@@ -35,46 +35,13 @@ fun Application.setupLoginRouting(appComponent: AppComponent) {
         }
 
         post("login/registration") {
-            val multipart = call.receiveMultipart()
-
-            var fileName: String?
-            var imageUrl: String? = null
-            var email = ""
-            var name = ""
-            var password = ""
-
-            multipart.forEachPart { part ->
-                when (part) {
-                    is PartData.FileItem -> {
-                        fileName = part.originalFileName
-                        @Suppress("DEPRECATION")
-                        val fileBytes = part.streamProvider().readBytes()
-
-                        // Сохранение файла в директории uploads
-                        val file = File("uploads/$fileName")
-                        file.writeBytes(fileBytes)
-
-                        imageUrl = "${Paths.RESOURCE_AVATARS_PATH}/$fileName"
-                        part.dispose() // Освобождаем ресурсы
-                    }
-
-                    is PartData.FormItem -> {
-                        when (part.name) {
-                            "email" -> email = part.value
-                            "name" -> name = part.value
-                            "password" -> password = part.value
-                        }
-                    }
-
-                    else -> part.dispose()
-                }
-            }
+            val dto = call.receive<RegistrationDto>()
             val response = controller.registerUser(
                 RegistrationDto(
-                    email = email,
-                    name = name,
-                    password = password,
-                    image = imageUrl
+                    email = dto.email,
+                    name = dto.name,
+                    password = dto.password,
+                    image = dto.image
                 )
             )
             call.respond(HttpStatusCode.OK, response)

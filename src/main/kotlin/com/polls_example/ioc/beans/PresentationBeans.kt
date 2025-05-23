@@ -23,7 +23,8 @@ fun Registry.usePresentationBeans() {
 
     singleton<SurveyController> {
         SurveyController(
-            surveyRepository = get()
+            surveyRepository = get(),
+            userRepository = get()
         )
     }
 
@@ -35,7 +36,9 @@ fun Registry.usePresentationBeans() {
 
     singleton<ChatController> {
         ChatController(
-            repository = get()
+            repository = get(),
+            userRepository = get(),
+            surveyRepository = get()
         )
     }
 

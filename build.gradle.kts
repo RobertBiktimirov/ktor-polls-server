@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.polls_example"
-version = "0.0.1"
+version = "0.0.2"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
@@ -65,5 +65,7 @@ dependencies {
 
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
+
+    implementation("io.ktor:ktor-server-cors:$ktorVersion")
 
 }

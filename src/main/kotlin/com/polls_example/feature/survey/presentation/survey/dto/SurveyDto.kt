@@ -8,7 +8,7 @@ data class SurveyRequestDto(
     val id: Int? = null,
     val title: String,
     val description: String?,
-    val image: String?,
+    val image: String? = null,
     val questions: List<QuestionRequestDto>
 )
 
@@ -16,7 +16,7 @@ data class SurveyRequestDto(
 data class QuestionRequestDto(
     val id: Int? = null,
     val title: String,
-    val image: String?,
+    val image: String? = null,
     val type: QuestionTypeModel,
     val answers: List<AnswerOptionRequestDto>?
 )
@@ -30,7 +30,7 @@ data class AnswerOptionRequestDto(
 @Serializable
 data class SurveyInvitationsRequestDto(
     val surveyId: Int,
-    val listUserId: List<Int>
+    val listUserId: List<Int> = emptyList()
 )
 
 @Serializable

@@ -46,7 +46,7 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
                 call.respond(HttpStatusCode.OK, response)
             }
 
-            get("surveys/created/{id}/responses/") {
+            get("surveys/created/responses/{id}") {
                 val surveyId = call.pathParameters["id"]?.toIntOrNull()
                     ?: return@get call.response.status(HttpStatusCode.BadRequest)
                 val userId = call.getUserId() ?: return@get call.response.status(HttpStatusCode.Unauthorized)
@@ -75,10 +75,23 @@ fun Application.setupSurveyRouting(appComponent: AppComponent) {
                 call.respond(HttpStatusCode.OK)
             }
 
-            delete("surveys/created/invitation") {
-                val requestDto = call.receive<SurveyInvitationDeleteRequestDto>()
-                controller.deleteInviteUserInSurvey(requestDto)
+            delete("surveys/created/{surveyId}/invitation/{userId}") {
+                val surveyId = call.pathParameters["surveyId"]?.toIntOrNull()
+                    ?: return@delete call.response.status(HttpStatusCode.BadRequest)
+                val userId = call.pathParameters["userId"]?.toIntOrNull()
+                    ?: return@delete call.response.status(HttpStatusCode.BadRequest)
+
+                controller.deleteInviteUserInSurvey(SurveyInvitationDeleteRequestDto(surveyId, userId))
                 call.respond(HttpStatusCode.OK)
+            }
+
+            get("surveys/created/invitation/{id}") {
+                val id = call
+                    .pathParameters["id"]
+                    ?.toIntOrNull()
+                    ?: return@get call.respond(HttpStatusCode.BadRequest)
+                val users = controller.getInvitationsUsersInSurvey(id)
+                call.respond(HttpStatusCode.OK, users)
             }
 
             put("surveys/created/updateInfo") {

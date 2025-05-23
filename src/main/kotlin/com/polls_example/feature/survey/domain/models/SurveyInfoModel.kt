@@ -17,6 +17,7 @@ data class SurveyInfoModel(
     val imageUrl: String?,
     val isActive: Boolean,
     val authorEmail: String?,
+    val authorId: Int?,
     val updateTime: Long?,
     val createdTime: Long
 )
@@ -29,10 +30,10 @@ data class SurveyResponseInfoModel(
 
 @Serializable
 data class SurveyResponseUserModel(
+    val id: Int,
     val email: String,
     val name: String,
     val image: String?,
-    val lastActiveTime: Long?
 )
 
 @Serializable
@@ -61,7 +62,7 @@ data class SurveyQuestionInfoModel(
 
 @Serializable
 data class AnswerOptionModel(
-    val id: Int,
+    val id: Int = 0,
     val text: String,
 )
 

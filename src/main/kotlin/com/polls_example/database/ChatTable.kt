@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.javatime.datetime
 object ChatTable : IntIdTable("chats") {
     val userId = integer("user_id").references(UsersTable.id, onDelete = ReferenceOption.CASCADE)
     val surveyId = integer("survey_id").references(SurveyTable.id, onDelete = ReferenceOption.CASCADE)
+    val corespondentId = integer("corespondent_id").nullable()
     val createdAt = datetime("created_at").nullable()
 }
 
@@ -19,5 +20,6 @@ class ChatDAO(id: EntityID<Int>) : IntEntity(id) {
 
     var userId by ChatTable.userId
     var surveyId by ChatTable.surveyId
+    var corespondentId by ChatTable.corespondentId
     var createdAt by ChatTable.createdAt
 }

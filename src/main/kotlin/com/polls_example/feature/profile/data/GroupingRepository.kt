@@ -74,9 +74,13 @@ class GroupingRepository {
             this.memberId = memberId
             this.createdAt = LocalDateTime.now()
         }
+    }
 
-        val newGroups = GroupItemsDAO
-            .find { GroupItemsTable.groupId eq groupId }
+    suspend fun deleteMember(groupId: Int, memberId: Int) = suspendTransaction {
+        GroupItemsTable.deleteWhere {
+            (this.groupId eq groupId) and
+                    (this.memberId eq memberId)
+        }
     }
 
     private fun groupsDAO(groupId: Int, userId: Int): GroupsDAO {

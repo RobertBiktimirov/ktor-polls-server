@@ -72,6 +72,8 @@ class SurveyRepository {
 
         if (surveyDAO.userId != userId && isCreated) throw SurveyForbiddenException()
 
+        val author = findAuthorUser(surveyDAO)
+
         return@suspendTransaction SurveyInfoModel(
             id = surveyId,
             title = surveyDAO.title,
@@ -80,7 +82,8 @@ class SurveyRepository {
             imageUrl = surveyDAO.imageUrl,
             isActive = surveyDAO.isActive,
             updateTime = surveyDAO.updatedAt?.timeInMillis,
-            authorEmail = findAuthorUser(surveyDAO)?.email
+            authorEmail = author?.email,
+            authorId = author?.id?.value
         )
     }
 
@@ -178,6 +181,7 @@ class SurveyRepository {
             surveyDao.updatedAt = LocalDateTime.now()
             surveyDao.flush()
 
+            val author = findAuthorUser(surveyDao)
             return@suspendTransaction SurveyInfoModel(
                 id = surveyDao.id.value,
                 title = surveyDao.title,
@@ -186,7 +190,8 @@ class SurveyRepository {
                 isActive = surveyDao.isActive,
                 updateTime = surveyDao.updatedAt?.timeInMillis,
                 createdTime = surveyDao.createdAt?.timeInMillis ?: 0L,
-                authorEmail = findAuthorUser(surveyDao)?.email
+                authorEmail = author?.email,
+                authorId = author?.id?.value
             )
         }
 
@@ -217,6 +222,7 @@ class SurveyRepository {
             }
         }
 
+        val author = findAuthorUser(surveyDao)
         return@suspendTransaction SurveyInfoModel(
             id = surveyDao.id.value,
             title = surveyDao.title,
@@ -225,7 +231,8 @@ class SurveyRepository {
             isActive = surveyDao.isActive,
             updateTime = surveyDao.updatedAt?.timeInMillis,
             createdTime = surveyDao.createdAt?.timeInMillis ?: 0L,
-            authorEmail = findAuthorUser(surveyDao)?.email
+            authorEmail = author?.email,
+            authorId = author?.id?.value
         )
     }
 
@@ -250,6 +257,14 @@ class SurveyRepository {
         SurveyTable.deleteWhere {
             SurveyTable.id eq surveyId
         }
+    }
+
+    suspend fun getInvitationsIdsSurvey(surveyId: Int): List<Int> = suspendTransaction {
+        val invitationSurveys = SurveyInvitationsDAO
+            .find { SurveyInvitationsTable.surveyId eq surveyId }
+            .toList()
+
+        invitationSurveys.map { it.userId }
     }
 
     suspend fun deleteInviteUserToSurvey(userId: Int, surveyId: Int) = suspendTransaction {
@@ -328,7 +343,7 @@ class SurveyRepository {
             email = user.email,
             name = user.name,
             image = user.image,
-            lastActiveTime = user.lastActivity?.timeInMillis
+            id = user.id.value
         )
     }
 
@@ -337,17 +352,24 @@ class SurveyRepository {
             .find { ResponseTable.surveyResponseId eq surveyResponseId }
             .toList()
 
-        return responses.map {
-            val question = QuestionDAO.findById(it.questionId)?.text ?: "Не удалось найти вопрос"
-            var answer = it.text ?: ""
+        return responses.map { responseDAO ->
+            val question = QuestionDAO.findById(responseDAO.questionId)?.text ?: "Не удалось найти вопрос"
+            var answer = responseDAO.text ?: ""
 
             if (answer.isEmpty()) {
                 val answerOption = AnswerOptionDAO
-                    .find { AnswerOptionTable.questionId eq it.questionId }
-                    .singleOrNull()
-                    ?.text
+                    .find { AnswerOptionTable.questionId eq responseDAO.questionId }
+                    .toList()
 
-                answer = answerOption ?: "Не удалось найти ответ"
+                val responseAnswers = answerOption
+                    .filter {
+                        ResponseAnswerDAO
+                            .find { ResponseAnswerTable.answerOptionId eq it.id.value }
+                            .singleOrNull() != null
+                    }
+                    .map { it.text }
+
+                answer = responseAnswers.joinToString(", ")
             }
 
             SurveyQuestionResponseModel(question, answer)

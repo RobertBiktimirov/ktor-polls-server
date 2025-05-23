@@ -1,5 +1,6 @@
 package surveys
 
+import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.survey.data.repository.SurveyRepository
 import com.polls_example.feature.survey.domain.models.SurveyInfoModel
 import com.polls_example.feature.survey.domain.models.SurveyResponsesInfoModel
@@ -19,7 +20,8 @@ import kotlin.test.assertEquals
 class SurveyControllerTest {
 
     private val surveyRepository = mockk<SurveyRepository>()
-    private val surveyController = SurveyController(surveyRepository)
+    private val userRepository = mockk<UserRepository>()
+    private val surveyController = SurveyController(surveyRepository, userRepository)
 
     @Test
     fun `test get surveys invitation returns list of surveys`() = runBlocking {
@@ -65,6 +67,7 @@ class SurveyControllerTest {
                 null,
                 true,
                 null,
+                null,
                 timeNow,
             ),
             responses = emptyList()
@@ -82,7 +85,8 @@ class SurveyControllerTest {
             null,
             true,
             null,
-            timeNow,
+            null,
+            timeNow
         )
         coEvery { surveyRepository.getSurveysResponses(surveyId) } returns listOf()
 
@@ -105,6 +109,7 @@ class SurveyControllerTest {
             "Description",
             null,
             true,
+            null,
             null,
             LocalDateTime.now().timeInMillis ?: 0,
         )

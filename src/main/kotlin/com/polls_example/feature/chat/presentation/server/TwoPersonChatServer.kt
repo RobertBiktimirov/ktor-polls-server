@@ -25,17 +25,21 @@ class TwoPersonChatServer {
     }
 
     suspend fun memberJoin(email: String, surveyId: Int, socket: WebSocketServerSession) {
+        members[email to surveyId]?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnected"))
         members[email to surveyId] = socket
-        sendToOther(email to surveyId, "$email joined the chat")
+    }
+
+    suspend fun sendMessage(emailTo: String, emailFrom: String, surveyId: Int, message: String) {
+        val recipientSession = members[emailTo to surveyId]
+        val senderSession = members[emailFrom to surveyId]
+
+        recipientSession?.sendMessage(Frame.Text(message))
+        senderSession?.sendMessage(Frame.Text(message))
     }
 
     suspend fun memberLeft(email: String, surveyId: Int) {
         members.remove(email to surveyId)
         sendToOther(email to surveyId, "$email left the chat.")
-    }
-
-    suspend fun sendMessage(email: String, surveyId: Int, message: String) {
-        members[email to surveyId]?.sendMessage(Frame.Text(message))
     }
 
     private suspend fun sendToOther(excluded: ChatMemberKey, message: String) {

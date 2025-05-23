@@ -1,11 +1,14 @@
 package com.polls_example.feature.survey.presentation.survey
 
+import com.polls_example.feature.login.data.repository.UserRepository
+import com.polls_example.feature.profile.presentation.grouping.dto.UserInGroupDto
 import com.polls_example.feature.survey.data.repository.SurveyRepository
 import com.polls_example.feature.survey.domain.models.*
 import com.polls_example.feature.survey.presentation.survey.dto.*
 
 class SurveyController(
-    val surveyRepository: SurveyRepository,
+    private val surveyRepository: SurveyRepository,
+    private val userRepository: UserRepository,
 ) {
 
     suspend fun getSurveysInvitation(userId: Int): List<SurveysModel> {
@@ -56,6 +59,21 @@ class SurveyController(
         surveyRepository.deleteInviteUserToSurvey(requestDto.userId, requestDto.surveyId)
     }
 
+    suspend fun getInvitationsUsersInSurvey(surveyId: Int): List<UserInGroupDto> {
+        val userIds = surveyRepository.getInvitationsIdsSurvey(surveyId = surveyId)
+        val usersModel = userIds.map { userRepository.userById(it) }
+        return usersModel
+            .filterNotNull()
+            .map {
+                UserInGroupDto(
+                    id = it.id,
+                    email = it.email,
+                    name = it.name,
+                    imageUrl = it.image
+                )
+            }
+    }
+
     suspend fun activateSurvey(surveyId: Int) {
         surveyRepository.activateSurvey(surveyId = surveyId)
     }
@@ -83,4 +101,4 @@ class SurveyController(
     suspend fun passSurvey(userId: Int, dto: PassSurveyDto) {
         surveyRepository.passSurvey(userId, dto)
     }
- }
+}

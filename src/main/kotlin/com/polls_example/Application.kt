@@ -21,6 +21,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.websocket.*
@@ -45,6 +46,12 @@ fun Application.module() {
 }
 
 fun Application.setupPlugins() {
+    install(CORS) {
+        anyHost()
+        allowMethod(HttpMethod.Get)
+        allowHeader(HttpHeaders.ContentType)
+    }
+
     install(ContentNegotiation) {
         json()
     }
@@ -117,11 +124,11 @@ fun Application.setupDatabase(databaseConfig: DatabaseConfig) {
 }
 
 fun Application.setupRouting(component: AppComponent) {
+    setupFileUploadRouting(component)
     setupLoginRouting(component)
     setupSurveyRouting(component)
     setupChatRouting(component)
     setupGroupingRouting(component)
-    setupFileUploadRouting(component)
 }
 
 fun Application.configureSecurity(
