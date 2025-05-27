@@ -9,7 +9,7 @@ import com.polls_example.feature.login.presentation.dto.LoginResponse
 import com.polls_example.feature.login.presentation.dto.RegistrationDto
 import com.polls_example.legacy.EmailService
 import com.polls_example.legacy.cache.SimpleCacheProvider
-import com.polls_example.security.CLAIM_EMAIL
+import com.polls_example.security.CLAIM_USER_ID
 import com.polls_example.security.JwtService
 import kotlin.random.Random
 
@@ -44,8 +44,8 @@ class LoginController(
     suspend fun refreshToken(token: String): String? {
         val decodedRefreshToken = verifyRefreshToken(token)
         return if (decodedRefreshToken != null) {
-            val emailFromRefreshToken: String = decodedRefreshToken.getClaim(CLAIM_EMAIL).asString()
-            val foundUser: UserModel? = userRepository.userByEmail(emailFromRefreshToken)
+            val emailFromRefreshToken: Int = decodedRefreshToken.getClaim(CLAIM_USER_ID).asInt()
+            val foundUser: UserModel? = userRepository.userById(emailFromRefreshToken)
             if (foundUser != null)
                 jwtService.createAccessToken(foundUser)
             else

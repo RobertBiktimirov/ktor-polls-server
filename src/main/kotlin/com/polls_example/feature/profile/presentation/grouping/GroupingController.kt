@@ -3,10 +3,7 @@ package com.polls_example.feature.profile.presentation.grouping
 import com.polls_example.feature.login.data.repository.UserRepository
 import com.polls_example.feature.profile.data.GroupingRepository
 import com.polls_example.feature.profile.domain.models.GroupInfoModel
-import com.polls_example.feature.profile.presentation.grouping.dto.CreateGroupDto
-import com.polls_example.feature.profile.presentation.grouping.dto.GroupInfoDto
-import com.polls_example.feature.profile.presentation.grouping.dto.GroupsDto
-import com.polls_example.feature.profile.presentation.grouping.dto.UserInGroupDto
+import com.polls_example.feature.profile.presentation.grouping.dto.*
 
 class GroupingController(
     private val repository: GroupingRepository,
@@ -59,6 +56,10 @@ class GroupingController(
             dto?.name,
             dto?.image
         )
+    }
+
+    suspend fun editUserInfo(userId: Int, info: EditProfileModel) {
+        userRepository.updateUserInfo(userId, info)
     }
 
     private suspend fun getGroupInfoDto(groupInfoModel: GroupInfoModel): GroupInfoDto {

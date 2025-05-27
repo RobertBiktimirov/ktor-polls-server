@@ -28,7 +28,7 @@ fun Application.setupLoginRouting(appComponent: AppComponent) {
             val request = call.receive<RefreshTokenDto>()
             val newAccessToken = controller.refreshToken(token = request.token)
             newAccessToken?.let {
-                call.respond(RefreshTokenDto(it))
+                call.respond(HttpStatusCode.OK, RefreshTokenDto(it))
             } ?: call.respond(
                 message = HttpStatusCode.Unauthorized
             )

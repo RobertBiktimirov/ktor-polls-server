@@ -2,12 +2,9 @@ package com.polls_example.feature.files.presentation
 
 import com.polls_example.feature.files.presentation.dto.UserAvatarDto
 import com.polls_example.ioc.AppComponent
-import com.polls_example.security.CLAIM_NAME
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -16,12 +13,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import java.io.File
 import java.util.*
-
-private fun ApplicationCall.getUserName(): String? =
-    principal<JWTPrincipal>()
-        ?.payload
-        ?.getClaim(CLAIM_NAME)
-        ?.asString()
 
 fun Application.setupFileUploadRouting(component: AppComponent) {
     routing {

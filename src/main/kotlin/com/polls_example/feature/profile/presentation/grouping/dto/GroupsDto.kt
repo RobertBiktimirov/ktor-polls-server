@@ -21,3 +21,10 @@ data class UserInGroupDto(
     val name: String?,
     val imageUrl: String?
 )
+
+@Serializable
+data class EditProfileModel(
+    val name: String? = null,
+    val email: String? = null,
+    val avatarUrl: String? = null,
+)

@@ -5,6 +5,7 @@ import com.polls_example.database.UsersTable
 import com.polls_example.database.toModel
 import com.polls_example.feature.login.domain.exception.UserException
 import com.polls_example.feature.login.domain.models.UserModel
+import com.polls_example.feature.profile.presentation.grouping.dto.EditProfileModel
 import com.polls_example.legacy.hashPassword
 import com.polls_example.legacy.suspendTransaction
 import com.polls_example.legacy.verificationPassword
@@ -23,6 +24,15 @@ class UserRepository {
     suspend fun updateUserAvatar(path: String, userId: Int) = suspendTransaction {
         val userDao = UserDAO.findById(userId)
         userDao?.image = path
+        userDao?.flush()
+    }
+
+    suspend fun updateUserInfo(userId: Int, editProfileModel: EditProfileModel) = suspendTransaction {
+        val userDao = UserDAO.findById(userId)
+        editProfileModel.name?.let { userDao?.name = it }
+        editProfileModel.email?.let { userDao?.email = it }
+        editProfileModel.avatarUrl?.let { userDao?.image = it }
+
         userDao?.flush()
     }
 

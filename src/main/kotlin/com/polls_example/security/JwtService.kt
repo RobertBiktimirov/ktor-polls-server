@@ -9,11 +9,6 @@ import com.polls_example.feature.login.domain.models.UserModel
 import io.ktor.server.auth.jwt.*
 import java.time.Instant
 
-// лучше не хранить
-const val CLAIM_EMAIL = "email"
-const val CLAIM_NAME = "name"
-const val CLAIM_IMAGE_URL = "image_url"
-const val CLAIM_EMAIL_VERIFIED_AT = "email_verified_at"
 const val CLAIM_USER_ID = "user_id"
 
 class JwtService(
@@ -45,18 +40,14 @@ class JwtService(
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim(CLAIM_USER_ID, userModel.id)
-            .withClaim(CLAIM_EMAIL, userModel.email)
-            .withClaim(CLAIM_NAME, userModel.name)
-            .withClaim(CLAIM_IMAGE_URL, userModel.image)
-            .withClaim(CLAIM_EMAIL_VERIFIED_AT, userModel.emailVerifiedAt)
             .withExpiresAt(Instant.now().plusMillis(expireIn))
             .sign(Algorithm.HMAC256(secret))
 
     suspend fun customValidator(
         credential: JWTCredential,
     ): JWTPrincipal? {
-        val email: String? = extractEmail(credential)
-        val foundUser: UserModel? = email?.let { userRepository.userByEmail(email) }
+        val id: Int = extractUserId(credential)
+        val foundUser: UserModel? = userRepository.userById(id)
 
         return foundUser?.let {
             if (audienceMatches(credential))
@@ -76,6 +67,6 @@ class JwtService(
     ): Boolean =
         this.audience == audience
 
-    private fun extractEmail(credential: JWTCredential): String? =
-        credential.payload.getClaim(CLAIM_EMAIL).asString()
+    private fun extractUserId(credential: JWTCredential): Int =
+        credential.payload.getClaim(CLAIM_USER_ID).asInt()
 }

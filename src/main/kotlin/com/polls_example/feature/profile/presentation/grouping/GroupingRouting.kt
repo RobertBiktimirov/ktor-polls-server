@@ -1,6 +1,7 @@
 package com.polls_example.feature.profile.presentation.grouping
 
 import com.polls_example.feature.profile.presentation.grouping.dto.CreateGroupDto
+import com.polls_example.feature.profile.presentation.grouping.dto.EditProfileModel
 import com.polls_example.feature.profile.presentation.grouping.dto.MemberGroupDto
 import com.polls_example.feature.survey.presentation.survey.getUserId
 import com.polls_example.ioc.AppComponent
@@ -31,9 +32,18 @@ fun Application.setupGroupingRouting(appComponent: AppComponent) {
 
             // TODO("позже вынести в другой маршрутизатор")
             get("profile/{id}") {
-                val id = call.pathParameters["id"]?.toIntOrNull() ?: return@get call.response.status(HttpStatusCode.BadRequest)
+                val id = call.pathParameters["id"]?.toIntOrNull()
+                    ?: return@get call.response.status(HttpStatusCode.BadRequest)
                 val user = controller.getUserById(id)
                 call.respond(HttpStatusCode.OK, user)
+            }
+
+            put("profile/{id}") {
+                val id = call.pathParameters["id"]?.toIntOrNull()
+                    ?: return@put call.response.status(HttpStatusCode.BadRequest)
+                val body = call.receive<EditProfileModel>()
+                controller.editUserInfo(userId = id, info = body)
+                call.respond(HttpStatusCode.OK)
             }
 
             get("profile/groups") {
