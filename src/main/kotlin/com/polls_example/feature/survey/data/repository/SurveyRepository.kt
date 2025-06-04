@@ -31,8 +31,8 @@ class SurveyRepository {
                 SurveysModel(
                     id = dao.id.value,
                     title = dao.title,
-                    isCompleted = invitationSurveys.firstOrNull { it.surveyId == it.surveyId }?.completedAt != null,
-                    image = dao.imageUrl,
+                    isCompleted = invitationSurveys.firstOrNull { it.surveyId == dao.id.value }?.completedAt != null,
+                    imageUrl = dao.imageUrl,
                     isActive = dao.isActive
                 )
             }
@@ -51,7 +51,7 @@ class SurveyRepository {
             SurveysModel(
                 id = dao.id.value,
                 title = dao.title,
-                image = dao.imageUrl,
+                imageUrl = dao.imageUrl,
                 isCompleted = true,
                 isActive = dao.isActive
             )
@@ -162,7 +162,7 @@ class SurveyRepository {
                 SurveysModel(
                     id = survey.id.value,
                     title = survey.title,
-                    image = survey.imageUrl,
+                    imageUrl = survey.imageUrl,
                     isCompleted = if (isUserCreated) null else isCompleted,
                     isUserCreated = isUserCreated,
                     isActive = survey.isActive

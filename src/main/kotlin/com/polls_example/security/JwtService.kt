@@ -10,6 +10,7 @@ import io.ktor.server.auth.jwt.*
 import java.time.Instant
 
 const val CLAIM_USER_ID = "user_id"
+const val CLAIM_EMAIL_VERIFIED_AT = "email_verified_at"
 
 class JwtService(
     private val userRepository: UserRepository,
@@ -40,6 +41,7 @@ class JwtService(
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim(CLAIM_USER_ID, userModel.id)
+            .withClaim(CLAIM_EMAIL_VERIFIED_AT, userModel.emailVerifiedAt)
             .withExpiresAt(Instant.now().plusMillis(expireIn))
             .sign(Algorithm.HMAC256(secret))
 

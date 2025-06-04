@@ -74,7 +74,8 @@ class ChatController(
                         email = it.email,
                         avatarUrl = it.image
                     )
-                }
+                },
+                timeLastMessage = chatItem.timeLastMessage,
             )
         }
     }

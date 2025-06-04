@@ -9,7 +9,9 @@ import com.polls_example.legacy.suspendTransaction
 import com.polls_example.legacy.timeInMillis
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 
 class ChatRepository {
 
@@ -67,7 +69,7 @@ class ChatRepository {
                     isUserMessage = it.senderId == senderData.id,
                     textMessage = it.text ?: "",
                     correspondentId = correspondentData.id,
-                    timeSend = (it.createdAt?.timeInMillis ?: 0L) * 1000,
+                    timeSend = (it.createdAt?.timeInMillis),
                     senderId = it.senderId
                 )
             }
@@ -94,7 +96,8 @@ class ChatRepository {
                 lastMessageText = lastMessageText,
                 surveyId = surveyId,
                 corespondentId = corespondentId,
-                isReadLastMessage = isReadLastMessage
+                isReadLastMessage = isReadLastMessage,
+                timeLastMessage = lastMessage?.createdAt?.timeInMillis,
             )
         }
     }
@@ -150,13 +153,16 @@ class ChatRepository {
 
         println("chatDao = $chatDao, chatDao2 = $chatDao2")
 
+        val instant = Instant.ofEpochMilli(chatMessageModel.timeSend ?: 0)
+        val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+
         ChatMessageDAO.new {
             senderId = chatMessageModel.senderId
             chatId = chatDao.id.value
             text = chatMessageModel.textMessage
             imageUrl = ""
             isRead = true
-            createdAt = LocalDateTime.now()
+            createdAt = localDateTime
         }
 
         ChatMessageDAO.new {
@@ -165,7 +171,7 @@ class ChatRepository {
             text = chatMessageModel.textMessage
             imageUrl = ""
             isRead = false
-            createdAt = LocalDateTime.now()
+            createdAt = localDateTime
         }
     }
 }

@@ -54,6 +54,18 @@ class UserRepository {
         users
     }
 
+    suspend fun checkHaveEmail(email: String) = suspendTransaction {
+        val userByEmail = UserDAO
+            .find { UsersTable.email eq email }
+            .singleOrNull()
+
+        userByEmail?.let {
+            throw UserException("Почта уже используется")
+        }
+
+        return@suspendTransaction
+    }
+
     suspend fun addUser(userModel: UserModel) = suspendTransaction {
         val userByEmail = UserDAO
             .find { UsersTable.email eq userModel.email }
@@ -93,12 +105,14 @@ class UserRepository {
         userByEmail.flush()
     }
 
-    suspend fun confirmEmail(email: String, isConfirm: Boolean = true) = suspendTransaction {
+    suspend fun confirmEmail(email: String, isConfirm: Boolean = true): UserModel? = suspendTransaction {
         val userByEmail = UserDAO
             .find { UsersTable.email eq email }
-            .singleOrNull() ?: throw UserException("Почта не найдена")
+            .singleOrNull()
 
-        userByEmail.emailVerifiedAt = if (isConfirm) LocalDateTime.now() else null
-        userByEmail.flush()
+        userByEmail?.emailVerifiedAt = if (isConfirm) LocalDateTime.now() else null
+        userByEmail?.flush()
+
+        userByEmail?.toModel()
     }
 }

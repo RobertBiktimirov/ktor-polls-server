@@ -11,6 +11,7 @@ import com.polls_example.legacy.EmailService
 import com.polls_example.legacy.cache.SimpleCacheProvider
 import com.polls_example.security.CLAIM_USER_ID
 import com.polls_example.security.JwtService
+import java.io.File
 import kotlin.random.Random
 
 interface PasswordValidator {
@@ -71,14 +72,24 @@ class LoginController(
         return LoginResponse(accessToken, refreshToken)
     }
 
-    suspend fun checkEmailConfirm(confirmEmailDto: ConfirmEmailDto): Boolean {
+    suspend fun checkEmailConfirm(confirmEmailDto: ConfirmEmailDto): LoginResponse? {
         val redisCode = cacheProvider.getCache(confirmEmailDto.email)?.toString()?.toIntOrNull()
         val isEquals = redisCode == confirmEmailDto.code
 
         println("user redis code = $redisCode")
         println("user confirm code = ${confirmEmailDto.code}")
 
-        if (isEquals) userRepository.confirmEmail(confirmEmailDto.email)
+        return userRepository.confirmEmail(confirmEmailDto.email)?.let {
+            LoginResponse(
+                accessToken = createAccessToken(it),
+                refreshToken = createRefreshToken(it)
+            )
+        }
+    }
+
+    suspend fun checkChangeEmailConfirm(confirmEmailDto: ConfirmEmailDto): Boolean? {
+        val redisCode = cacheProvider.getCache(confirmEmailDto.email)?.toString()?.toIntOrNull()
+        val isEquals = redisCode == confirmEmailDto.code
         return isEquals
     }
 
@@ -87,6 +98,17 @@ class LoginController(
         if (emailService.setConfirmEmailMessage(email, code)) {
             cacheProvider.setCache(email, code)
         }
+    }
+
+    suspend fun checkHaveEmail(email: String) {
+        userRepository.checkHaveEmail(email)
+    }
+
+    fun getRandomImageName(): String? {
+        val iconsDir = File("defoult_icons")
+        val imageFiles = iconsDir.listFiles()?.filter { it.isFile && it.extension == "jpeg" }?.map { it.name }
+
+        return imageFiles?.let { it[Random.nextInt(it.size)] }
     }
 
     private fun createAccessToken(user: UserModel) = jwtService.createAccessToken(user)

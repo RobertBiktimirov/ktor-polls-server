@@ -47,6 +47,12 @@ fun Application.setupLoginRouting(appComponent: AppComponent) {
             call.respond(HttpStatusCode.OK, response)
         }
 
+        get("login/check-have-email") {
+            val email = call.queryParameters["email"] ?: return@get call.respond(HttpStatusCode.BadRequest)
+            controller.checkHaveEmail(email)
+            call.respond(HttpStatusCode.OK)
+        }
+
         post("login/send-confirm-email-code") {
             val email = call.receive<EmailCodeDto>()
             if (email.email.isNullOrEmpty()) return@post call.response.status(HttpStatusCode.BadRequest)
@@ -57,7 +63,14 @@ fun Application.setupLoginRouting(appComponent: AppComponent) {
         post("login/confirm-email") {
             val confirmEmailDto = call.receive<ConfirmEmailDto>()
             val response = controller.checkEmailConfirm(confirmEmailDto)
-            if (response) call.response.status(HttpStatusCode.OK)
+            if (response != null) call.respond(HttpStatusCode.OK, response)
+            else call.response.status(HttpStatusCode.BadRequest)
+        }
+
+        post("profile/confirm-email") {
+            val confirmEmailDto = call.receive<ConfirmEmailDto>()
+            val response = controller.checkChangeEmailConfirm(confirmEmailDto)
+            if (response == true) call.response.status(HttpStatusCode.OK)
             else call.response.status(HttpStatusCode.BadRequest)
         }
 

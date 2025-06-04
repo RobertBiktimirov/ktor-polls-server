@@ -18,7 +18,7 @@ data class QuestionRequestDto(
     val title: String,
     val image: String? = null,
     val type: QuestionTypeModel,
-    val answers: List<AnswerOptionRequestDto>?
+    val answers: List<AnswerOptionRequestDto>? = null
 )
 
 @Serializable

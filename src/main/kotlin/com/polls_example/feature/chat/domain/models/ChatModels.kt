@@ -32,6 +32,7 @@ data class ChatItemModel(
     val surveyId: Int,
     val corespondentId: Int?,
     val isReadLastMessage: Boolean,
+    val timeLastMessage: Long?
 )
 
 @Serializable
@@ -41,6 +42,7 @@ data class ChatItemDto(
     val correspondent: CorrespondentChatModel?,
     val lastMessageText: String?,
     val isReadLastMessages: Boolean = true,
+    val timeLastMessage: Long? = null
 ) {
 
     @Serializable

@@ -27,7 +27,7 @@ class SurveyControllerTest {
     fun `test get surveys invitation returns list of surveys`() = runBlocking {
         val userId = 1
         val expectedSurveys =
-            listOf(SurveysModel(id = 1, title = "Survey 1", isCompleted = false, image = null, isActive = true))
+            listOf(SurveysModel(id = 1, title = "Survey 1", isCompleted = false, imageUrl = null, isActive = true))
 
         // Настройка мока
         coEvery { surveyRepository.getSurveysInvitation(userId) } returns expectedSurveys
@@ -44,7 +44,7 @@ class SurveyControllerTest {
     fun `test get surveys user returns list of surveys`() = runBlocking {
         val userId = 1
         val expectedSurveys =
-            listOf(SurveysModel(id = 1, title = "Survey 2", isCompleted = true, image = null, isActive = false))
+            listOf(SurveysModel(id = 1, title = "Survey 2", isCompleted = true, imageUrl = null, isActive = false))
 
         coEvery { surveyRepository.getSurveysUser(userId) } returns expectedSurveys
 

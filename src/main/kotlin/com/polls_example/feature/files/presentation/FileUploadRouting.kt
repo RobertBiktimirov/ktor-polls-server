@@ -92,14 +92,17 @@ private fun Routing.getImageRoute() {
         }
 
         // 2. Исправляем путь к файлу (убираем лишнее replace)
-        val file = File("${Paths.RESOURCE_PATH}/$filename").absoluteFile
+        var file = File("${Paths.RESOURCE_PATH}/$filename").absoluteFile
 
         println("Trying to access file at: ${file.absolutePath}") // Логируем путь
 
         // 3. Добавляем проверку на доступность файла
         if (!file.exists()) {
-            call.respond(HttpStatusCode.NotFound, "Image not found at: ${file.absolutePath}")
-            return@get
+            file = File("${Paths.RESOURCE_PATH_DEFAULT}/$filename").absoluteFile
+            if (!file.exists()) {
+                call.respond(HttpStatusCode.NotFound, "Image not found at: ${file.absolutePath}")
+                return@get
+            }
         }
         if (!file.isFile) {
             call.respond(HttpStatusCode.Conflict, "Path is not a file")

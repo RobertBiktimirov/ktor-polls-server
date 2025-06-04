@@ -38,8 +38,8 @@ fun Application.setupGroupingRouting(appComponent: AppComponent) {
                 call.respond(HttpStatusCode.OK, user)
             }
 
-            put("profile/{id}") {
-                val id = call.pathParameters["id"]?.toIntOrNull()
+            put("profile") {
+                val id = call.getUserId()
                     ?: return@put call.response.status(HttpStatusCode.BadRequest)
                 val body = call.receive<EditProfileModel>()
                 controller.editUserInfo(userId = id, info = body)

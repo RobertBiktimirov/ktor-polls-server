@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class SurveysModel(
     val id: Int,
     val title: String,
-    val image: String?,
+    val imageUrl: String?,
     val isCompleted: Boolean? = null,
     val isUserCreated: Boolean = false,
     val isActive: Boolean = true,
