@@ -12,7 +12,7 @@ jwt:
 
 postgres:
   url: $DATABASE_URL
-  user: DATABASE_USER
+  user: $DATABASE_USER
   password: $DATABASE_PASSWORD
 
 email:
