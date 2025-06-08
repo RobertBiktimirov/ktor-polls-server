@@ -4,6 +4,8 @@ services:
     image: $CI_REGISTRY_IMAGE:$DOCKER_TAG
     ports:
       - "8080:8080"
+    volumes:
+      - $SSH_DIR/files:/files
   postgres:
     image: postgres:15
     volumes:
