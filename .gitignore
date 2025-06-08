@@ -5,7 +5,6 @@ build/
 !**/src/test/**/build/
 
 local.properties
-src/main/resources/application.yaml
 
 ### STS ###
 .apt_generated

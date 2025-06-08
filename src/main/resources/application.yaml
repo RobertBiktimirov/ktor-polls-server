@@ -1,0 +1,23 @@
+ktor:
+  application:
+    modules:
+      - com.polls_example.ApplicationKt.module
+  deployment:
+    port: 8080
+jwt:
+  secret: $JWT_SECRET
+  issuer: $JWT_ISSUER
+  audience: $JWT_AUDIENCE
+  realm: $JWT_REALM
+
+postgres:
+  url: $DATABASE_URL
+  user: DATABASE_USER
+  password: $DATABASE_PASSWORD
+
+email:
+  address: $EMAIL_ADDRESS
+  password: $EMAIL_PASSWORD
+  from: $EMAIL_FROM
+  host_name: $EMAIL_HOST_NAME
+  port: $EMAIL_PORT
