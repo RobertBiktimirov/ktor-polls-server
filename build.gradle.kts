@@ -5,14 +5,15 @@ var logbackVersion = "1.4.14"
 plugins {
     kotlin("jvm") version "2.1.0"
     kotlin("plugin.serialization") version "2.1.0"
-    id("io.ktor.plugin") version "3.0.3"
+    id("io.ktor.plugin") version "3.1.3"
+    application
 }
 
 group = "com.polls_example"
 version = "0.0.2"
 
 application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+    mainClass.set("com.polls_example.ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
@@ -68,4 +69,12 @@ dependencies {
 
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
 
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Main-Class" to "com.polls_example.ApplicationKt"
+        )
+    }
 }
